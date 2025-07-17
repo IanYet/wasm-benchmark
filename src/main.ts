@@ -1,5 +1,6 @@
 import { drawFromSrc } from './draw'
 import './style.css'
+// import { geneArrayByNew, geneArrayByLiteral, geneTypedArray } from './test'
 
 async function main() {
 	const appEl = document.getElementById('app')!
@@ -18,3 +19,11 @@ async function main() {
 }
 
 main()
+
+// function test() {
+// 	// geneArrayByNew(10_000_000)
+// 	// geneArrayByLiteral(10_000_000)
+// 	// geneTypedArray(10_000_000)
+// }
+
+// test()

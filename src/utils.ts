@@ -33,3 +33,9 @@ export const m3 = (
 	a32: number,
 	a33: number
 ): M3 => new Uint32Array([a11, a12, a13, a21, a22, a23, a31, a32, a33]) as M3
+
+export const applyM2 = (m: M2, v: V2): V2 => {
+	const x = m[0] * v[0] + m[1] * v[1]
+	const y = m[2] * v[0] + m[3] * v[1]
+	return v2(x, y)
+}
