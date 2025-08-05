@@ -22,7 +22,7 @@ export const perspectiveTransform = (
 			const x = Math.floor(v[0])
 			const y = Math.floor(v[1])
 
-			if (x < -1 || y < -1) {
+			if (x < -1 || y < -1 || x > width - 1 || y > height - 1) {
 				dst[(j * width + i) * 4] = 0
 				dst[(j * width + i) * 4 + 1] = 0
 				dst[(j * width + i) * 4 + 2] = 0
