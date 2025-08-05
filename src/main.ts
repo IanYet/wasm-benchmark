@@ -1,5 +1,6 @@
 import { drawFromSrc } from './draw'
 import './style.css'
+// import { opArray, opTypedArray } from './test'
 // import { geneArrayByNew, geneArrayByLiteral, geneTypedArray } from './test'
 
 async function main() {
@@ -20,10 +21,14 @@ async function main() {
 
 main()
 
-// function test() {
-// 	// geneArrayByNew(10_000_000)
-// 	// geneArrayByLiteral(10_000_000)
-// 	// geneTypedArray(10_000_000)
-// }
+function test() {
+	// geneArrayByNew(10_000_000)
+	// geneArrayByLiteral(10_000_000)
+	// geneTypedArray(10_000_000)
+	// opArray(60_000_000)
+	// opTypedArray(60_000_000)
+	// opArray(10_000_000)
+	// opTypedArray(10_000_000)
+}
 
-// test()
+test()
