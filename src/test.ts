@@ -49,17 +49,15 @@ export const geneTypedArray = (count: number): void => {
 
 /**
  * Chapter 2: array operation (read & write) benchmark
- * result: time is almost same when length is less than 10_000_000, typed array is faster slightly, but not much.
- * When length is 60_000_000, typed array is **10x** faster than array. For normal array, time cost does not increase linearly.
+ * result: typed array > normal array(**1.2x slower**),
  */
 
 /**
- * Imagicly, max count should be less than 2^26 in chromeV138 mba m2 24g. FYI, 4K image(4096x4096) is about 2^24 pixels, which has 2^26 elements(1 pixel == 4 element for rgba).
+ * Magically, max count is limited less than 2^26 in chromeV138 mba m2 24g. As reference, one 4K image(4096x4096) contains about 2^24 pixels, which needs 2^26 elements(1 pixel == 4 element for rgba).
  * @param count
  */
 export const opArray = (count: number): void => {
-	const arr = new Array(count)
-	arr[0] = 1
+	const arr = new Array(count).fill(1)
 	console.time('opArray')
 	for (let i = 1; i < count; i++) {
 		arr[i] = arr[i - 1] + 1

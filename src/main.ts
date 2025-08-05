@@ -19,7 +19,7 @@ async function main() {
 	)
 }
 
-main()
+// main()
 
 function test() {
 	// geneArrayByNew(10_000_000)
