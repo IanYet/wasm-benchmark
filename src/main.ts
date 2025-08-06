@@ -6,6 +6,7 @@ import { inverseM3, type M3 } from './utils'
 // import { geneArrayByNew, geneArrayByLiteral, geneTypedArray } from './test'
 
 const [width, height] = [512, 512]
+const [dWidth, dHeight] = [width * 2, height * 2]
 
 async function main() {
 	const appEl = document.getElementById('app')!
@@ -23,21 +24,26 @@ async function main() {
 	)
 
 	const dstCanvas = document.createElement('canvas')
-	dstCanvas.width = width
-	dstCanvas.height = height
+	dstCanvas.width = dWidth
+	dstCanvas.height = dHeight
 	appEl.appendChild(dstCanvas)
 
 	const perspectiveMatrix: M3 = [0.4, 0, 0.2, -0.2, 0.6, 0.2, -0.4, 0, 1]
-	// const perspectiveMatrix: M3 = [0.5, 0, 0.5, 0, 0.5, 0.5, 0, 0, 1]
 
 	const inverseMatrix = inverseM3(perspectiveMatrix)
-	console.log(inverseMatrix)
 
 	console.time('perspectiveTransform')
-	const dstArrayBuffer = perspectiveTransform(srcImageData.data, width, height, inverseMatrix)
+	const dstArrayBuffer = perspectiveTransform(
+		srcImageData.data,
+		width,
+		height,
+		dWidth,
+		dHeight,
+		inverseMatrix
+	)
 	console.timeEnd('perspectiveTransform')
 
-	const dstImageData = new ImageData(dstArrayBuffer, width, height)
+	const dstImageData = new ImageData(dstArrayBuffer, dWidth, dHeight)
 	drawFromImageData(dstCanvas, dstImageData)
 }
 
