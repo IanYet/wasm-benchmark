@@ -4,6 +4,7 @@ import { perspectiveTransform } from './transform'
 import { inverseM3, type M3 } from './utils'
 // import { opArray, opTypedArray } from './test'
 // import { geneArrayByNew, geneArrayByLiteral, geneTypedArray } from './test'
+import { add } from '../build/release.js'
 
 const [width, height] = [512, 512]
 const [dWidth, dHeight] = [width * 2, height * 2]
@@ -45,6 +46,8 @@ async function main() {
 
 	const dstImageData = new ImageData(dstArrayBuffer, dWidth, dHeight)
 	drawFromImageData(dstCanvas, dstImageData)
+
+	console.log(add(1, 2)) // Test the add function from WebAssembly
 }
 
 main()

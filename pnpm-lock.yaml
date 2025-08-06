@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      assemblyscript:
+        specifier: ^0.28.4
+        version: 0.28.4
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
@@ -287,6 +290,15 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
+  assemblyscript@0.28.4:
+    resolution: {integrity: sha512-FHJ1Sm+d1siK6J+sqNUXsl9h9lzSQbnhZxG4X4Vp7LmlwD3DRvW0uk4rB4ekisw0XhrPaIKaFDqkjo1bpHzM6w==}
+    engines: {node: '>=20', npm: '>=10'}
+    hasBin: true
+
+  binaryen@123.0.0-nightly.20250530:
+    resolution: {integrity: sha512-d1zPHBN5YlOd3Ff+OUxvVExuFeh8heSnqe+X3bjItFxGLvn4VGBKmrvv7pgy/cRhrIUGuPW138iaWfDhwjyDqg==}
+    hasBin: true
+
   esbuild@0.25.6:
     resolution: {integrity: sha512-GVuzuUwtdsghE3ocJ9Bs8PNoF13HNQ5TXbEi2AhvVb8xU1Iwt9Fos9FEamfoee+u/TOsn7GUWc04lz46n2bbTg==}
     engines: {node: '>=18'}
@@ -304,6 +316,9 @@ packages:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
+
+  long@5.3.2:
+    resolution: {integrity: sha512-mNAgZ1GmyNhD7AuqnTG3/VQ26o760+ZYBPKjPvugO8+nLbYfX6TVpJPseBvopbdY+qpZ/lKUnmEc1LeZYS3QAA==}
 
   nanoid@3.3.11:
     resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
@@ -521,6 +536,13 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
+  assemblyscript@0.28.4:
+    dependencies:
+      binaryen: 123.0.0-nightly.20250530
+      long: 5.3.2
+
+  binaryen@123.0.0-nightly.20250530: {}
+
   esbuild@0.25.6:
     optionalDependencies:
       '@esbuild/aix-ppc64': 0.25.6
@@ -556,6 +578,8 @@ snapshots:
 
   fsevents@2.3.3:
     optional: true
+
+  long@5.3.2: {}
 
   nanoid@3.3.11: {}
 
