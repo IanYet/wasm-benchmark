@@ -27,7 +27,9 @@ async function main() {
 	dstCanvas.height = height
 	appEl.appendChild(dstCanvas)
 
-	const perspectiveMatrix: M3 = [0.5, 0, 0, 0, 0.5, 0, 0, 0, 1]
+	const perspectiveMatrix: M3 = [0.4, 0, 0.2, -0.2, 0.6, 0.2, -0.4, 0, 1]
+	// const perspectiveMatrix: M3 = [0.5, 0, 0.5, 0, 0.5, 0.5, 0, 0, 1]
+
 	const inverseMatrix = inverseM3(perspectiveMatrix)
 	console.log(inverseMatrix)
 

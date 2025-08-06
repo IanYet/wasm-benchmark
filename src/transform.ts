@@ -11,18 +11,18 @@ export const perspectiveTransform = (
 
 	for (let i = 0; i < width; ++i) {
 		for (let j = 0; j < height; ++j) {
-			v[0] = i
-			v[1] = j
+			v[0] = i / width
+			v[1] = j / height
 			v[2] = 1
 			applyM3Inplace(m, v)
-			v[0] = v[0] / v[2]
-			v[1] = v[1] / v[2]
+			v[0] = (width * v[0]) / v[2]
+			v[1] = (height * v[1]) / v[2]
 			v[2] = 1
 
 			const x = Math.floor(v[0])
 			const y = Math.floor(v[1])
 
-			if (x < -1 || y < -1 || x > width - 1 || y > height - 1) {
+			if (x < 0 || y < 0 || x > width - 1 || y > height - 1) {
 				dst[(j * width + i) * 4] = 0
 				dst[(j * width + i) * 4 + 1] = 0
 				dst[(j * width + i) * 4 + 2] = 0
