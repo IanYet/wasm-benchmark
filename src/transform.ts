@@ -24,30 +24,23 @@ export const perspectiveTransform = (
 			const x = Math.floor(v[0])
 			const y = Math.floor(v[1])
 
-			if (x < 0 || y < 0 || x > sW - 1 || y > sH - 1) {
-				dst[(j * dW + i) * 4] = 0
-				dst[(j * dW + i) * 4 + 1] = 0
-				dst[(j * dW + i) * 4 + 2] = 0
-				dst[(j * dW + i) * 4 + 3] = 0
-			} else {
-				const factorX = v[0] - x
-				const factorY = v[1] - y
+			const factorX = v[0] - x
+			const factorY = v[1] - y
 
-				for (let k = 0; k < 4; ++k) {
-					dst[(j * dW + i) * 4 + k] = lerpNumber(
-						lerpNumber(
-							src[(y * sW + x) * 4 + k],
-							src[(y * sW + x + 1) * 4 + k],
-							factorX
-						),
-						lerpNumber(
-							src[((y + 1) * sW + x) * 4 + k],
-							src[((y + 1) * sW + x + 1) * 4 + k],
-							factorX
-						),
-						factorY
-					)
-				}
+			for (let k = 0; k < 4; ++k) {
+				dst[(j * dW + i) * 4 + k] = lerpNumber(
+					lerpNumber(
+						src[(y * sW + x) * 4 + k] ?? 0,
+						src[(y * sW + x + 1) * 4 + k] ?? 0,
+						factorX
+					),
+					lerpNumber(
+						src[((y + 1) * sW + x) * 4 + k] ?? 0,
+						src[((y + 1) * sW + x + 1) * 4 + k] ?? 0,
+						factorX
+					),
+					factorY
+				)
 			}
 		}
 	}
