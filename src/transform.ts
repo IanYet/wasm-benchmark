@@ -7,7 +7,7 @@ export const perspectiveTransform = (
 	dW: number,
 	dH: number,
 	m: M3
-): Uint8ClampedArray => {
+): Uint8ClampedArray<ArrayBuffer> => {
 	const dst = new Uint8ClampedArray(dW * dH * 4)
 	const v = v3(0, 0, 1)
 
