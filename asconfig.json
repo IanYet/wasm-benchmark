@@ -16,8 +16,8 @@
 			"noAssert": false,
 			"exportMemory": true,
 			"importMemory": true,
-			"initialMemory": 256,
-			"maximumMemory": 256
+			"initialMemory": 512,
+			"maximumMemory": 512
 		}
 	},
 	"options": {

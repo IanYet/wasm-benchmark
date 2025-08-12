@@ -65,7 +65,7 @@ async function initAs() {
 	const wasmModule = await WebAssembly.compileStreaming(response)
 	const asModule = await asInstantiate(wasmModule, {
 		env: {
-			memory: new WebAssembly.Memory({ initial: 256, maximum: 256 }),
+			memory: new WebAssembly.Memory({ initial: 512, maximum: 512 }),
 		},
 	})
 
