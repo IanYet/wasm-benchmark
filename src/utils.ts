@@ -162,3 +162,7 @@ export const lerpInplace = (a: Color, b: Color, t: number): Color => {
 export const lerpNumber = (a: number, b: number, t: number): number => {
 	return a + (b - a) * t
 }
+
+export const sleep = async (ms: number) => {
+	return new Promise((resolve) => setTimeout(resolve, ms))
+}

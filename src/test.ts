@@ -9,6 +9,7 @@
  */
 export const geneArrayByNew = (count: number): void => {
 	console.time(`geneArrayByNew ${count} times`)
+	//@ts-ignore
 	let arr: number[]
 	for (let i = 0; i < count; i++) {
 		arr = new Array(1, 2, 3, 4)
@@ -22,6 +23,7 @@ export const geneArrayByNew = (count: number): void => {
  */
 export const geneArrayByLiteral = (count: number): void => {
 	console.time(`geneArrayByLiteral ${count} times`)
+	//@ts-ignore
 	let arr: number[]
 	for (let i = 0; i < count; i++) {
 		arr = [1, 2, 3, 4]

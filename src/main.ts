@@ -1,13 +1,13 @@
 import { drawFromImageData, drawFromSrc } from './draw'
 import './style.css'
 import { perspectiveTransform } from './transform'
-import { inverseM3, type M3 } from './utils'
-// import { opArray, opTypedArray } from './test'
-// import { geneArrayByNew, geneArrayByLiteral, geneTypedArray } from './test'
-import { add, lerpNumber } from '../build/release.js'
+import { inverseM3, sleep, type M3 } from './utils'
+import { instantiate as asInstantiate } from '../build/release.js'
+import asWasmUrl from '../build/release.wasm?url'
 
 const [width, height] = [512, 512]
 const [dWidth, dHeight] = [width * 2, height * 2]
+const dstList = ['js-dst', 'as-dst']
 
 async function main() {
 	const appEl = document.getElementById('app')!
@@ -24,16 +24,28 @@ async function main() {
 		} pixels`
 	)
 
-	const dstCanvas = document.createElement('canvas')
-	dstCanvas.width = dWidth
-	dstCanvas.height = dHeight
-	appEl.appendChild(dstCanvas)
+	const dstCavList = dstList.map((id) => {
+		const dstCanvas = document.createElement('canvas')
+		dstCanvas.width = dWidth
+		dstCanvas.height = dHeight
+		dstCanvas.id = id
+		appEl.appendChild(dstCanvas)
+		return dstCanvas
+	})
 
 	const perspectiveMatrix: M3 = [0.4, 0, 0.2, -0.2, 0.6, 0.2, -0.4, 0, 1]
-
 	const inverseMatrix = inverseM3(perspectiveMatrix)
 
-	console.time('perspectiveTransform')
+	js(srcImageData, inverseMatrix, dstCavList[0])
+
+	await sleep(1000)
+
+	const asModule = await initAs()
+	as(asModule, srcImageData, inverseMatrix)
+}
+
+function js(srcImageData: ImageData, inverseMatrix: M3, dstCanvas: HTMLCanvasElement) {
+	console.time('js perspectiveTransform')
 	const dstArrayBuffer = perspectiveTransform(
 		srcImageData.data,
 		width,
@@ -42,25 +54,28 @@ async function main() {
 		dHeight,
 		inverseMatrix
 	)
-	console.timeEnd('perspectiveTransform')
+	console.timeEnd('js perspectiveTransform')
 
 	const dstImageData = new ImageData(dstArrayBuffer, dWidth, dHeight)
 	drawFromImageData(dstCanvas, dstImageData)
-
-	console.log(add(1.1, 2.2)) // Test the add function from WebAssembly
-	console.log(lerpNumber(0, 1000, 0.5)) // Test the lerpNumber function from WebAssembly;
 }
+
+async function initAs() {
+	const response = await fetch(asWasmUrl)
+	const wasmModule = await WebAssembly.compileStreaming(response)
+	const asModule = await asInstantiate(wasmModule, {
+		env: {
+			memory: new WebAssembly.Memory({ initial: 256, maximum: 256 }),
+		},
+	})
+
+	return asModule
+}
+
+function as(
+	asModule: Awaited<ReturnType<typeof asInstantiate>>,
+	srcImageData: ImageData,
+	inverseMatrix: M3
+) {}
 
 main()
-
-function test() {
-	// geneArrayByNew(10_000_000)
-	// geneArrayByLiteral(10_000_000)
-	// geneTypedArray(10_000_000)
-	// opArray(60_000_000)
-	// opTypedArray(60_000_000)
-	// opArray(10_000_000)
-	// opTypedArray(10_000_000)
-}
-
-test()
