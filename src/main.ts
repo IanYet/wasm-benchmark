@@ -7,7 +7,7 @@ import asWasmUrl from '../build/release.wasm?url'
 
 const [width, height] = [512, 512]
 const [dWidth, dHeight] = [width * 2, height * 2]
-const dstList = ['js-dst', 'as-dst']
+const dstList = ['js-dst', 'as-dst', 'as-simd-dst']
 
 async function main() {
 	const appEl = document.getElementById('app')!
@@ -42,6 +42,9 @@ async function main() {
 
 	const asModule = await initAs()
 	as(asModule, srcImageData, inverseMatrix, dstCavList[1])
+
+	await sleep(1000)
+	asSIMD(asModule, srcImageData, inverseMatrix, dstCavList[2])
 }
 
 function js(srcImageData: ImageData, inverseMatrix: M3, dstCanvas: HTMLCanvasElement) {
@@ -94,4 +97,25 @@ function as(
 	drawFromImageData(dstCanvas, dstImageData)
 }
 
+function asSIMD(
+	asModule: Awaited<ReturnType<typeof asInstantiate>>,
+	srcImageData: ImageData,
+	inverseMatrix: M3,
+	dstCanvas: HTMLCanvasElement
+) {
+	const { memory, alloc, perspectiveTransformSIMD } = asModule
+	const srcPtr = alloc(width * height * 4)
+	const dstPtr = alloc(dWidth * dHeight * 4)
+
+	const wasmData = new Uint8ClampedArray(memory.buffer)
+	wasmData.set(srcImageData.data, srcPtr)
+
+	console.time('as SIMD perspectiveTransform')
+	perspectiveTransformSIMD(srcPtr, dstPtr, width, height, dWidth, dHeight, inverseMatrix)
+	console.timeEnd('as SIMD perspectiveTransform')
+
+	const dstArrayBuffer = new Uint8ClampedArray(memory.buffer, dstPtr, dWidth * dHeight * 4)
+	const dstImageData = new ImageData(dstArrayBuffer, dWidth, dHeight)
+	drawFromImageData(dstCanvas, dstImageData)
+}
 main()

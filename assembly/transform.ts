@@ -9,34 +9,27 @@ export function perspectiveTransform(
 	dH: i32,
 	m: M3
 ): void {
-	// 预分配变量，避免在循环中创建
-	let vx: f64, vy: f64, vz: f64
-	let tx: f64, ty: f64, tz: f64
-
 	for (let i: i32 = 0; i < dW; ++i) {
 		for (let j: i32 = 0; j < dH; ++j) {
-			// 内联矩阵乘法，避免函数调用和数组创建
-			vx = f64(i) / f64(dW)
-			vy = f64(j) / f64(dH)
-			vz = 1.0
+			const vx = f64(i) / f64(dW)
+			const vy = f64(j) / f64(dH)
+			const vz = 1.0
 
-			// 矩阵变换
-			tx = m[0] * vx + m[1] * vy + m[2] * vz
-			ty = m[3] * vx + m[4] * vy + m[5] * vz
-			tz = m[6] * vx + m[7] * vy + m[8] * vz
+			const tx = m[0] * vx + m[1] * vy + m[2] * vz
+			const ty = m[3] * vx + m[4] * vy + m[5] * vz
+			const tz = m[6] * vx + m[7] * vy + m[8] * vz
 
-			vx = (f64(sW) * tx) / tz
-			vy = (f64(sH) * ty) / tz
+			const finalVx = (f64(sW) * tx) / tz
+			const finalVy = (f64(sH) * ty) / tz
 
-			const x = i32(Math.floor(vx))
-			const y = i32(Math.floor(vy))
+			const x = i32(Math.floor(finalVx))
+			const y = i32(Math.floor(finalVy))
 
-			const factorX = vx - f64(x)
-			const factorY = vy - f64(y)
+			const factorX = finalVx - f64(x)
+			const factorY = finalVy - f64(y)
 
 			const dstBaseIndex = (j * dW + i) * 4
 
-			// 内联颜色获取和插值，减少函数调用
 			for (let k: i32 = 0; k < 4; ++k) {
 				const c00 = getColorInline(srcPtr, x, y, k, sW, sH)
 				const c10 = getColorInline(srcPtr, x + 1, y, k, sW, sH)
