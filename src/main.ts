@@ -78,15 +78,18 @@ function as(
 	inverseMatrix: M3,
 	dstCanvas: HTMLCanvasElement
 ) {
-	const { memory, perspectiveTransform } = asModule
+	const { memory, alloc, perspectiveTransform } = asModule
+	const srcPtr = alloc(width * height * 4)
+	const dstPtr = alloc(dWidth * dHeight * 4)
+
 	const wasmData = new Uint8ClampedArray(memory.buffer)
-	wasmData.set(srcImageData.data)
-	perspectiveTransform(width, height, dWidth, dHeight, inverseMatrix)
-	const dstArrayBuffer = new Uint8ClampedArray(
-		memory.buffer,
-		srcImageData.data.length,
-		dWidth * dHeight * 4
-	)
+	wasmData.set(srcImageData.data, srcPtr)
+
+	console.time('as perspectiveTransform')
+	perspectiveTransform(srcPtr, dstPtr, width, height, dWidth, dHeight, inverseMatrix)
+	console.timeEnd('as perspectiveTransform')
+
+	const dstArrayBuffer = new Uint8ClampedArray(memory.buffer, dstPtr, dWidth * dHeight * 4)
 	const dstImageData = new ImageData(dstArrayBuffer, dWidth, dHeight)
 	drawFromImageData(dstCanvas, dstImageData)
 }

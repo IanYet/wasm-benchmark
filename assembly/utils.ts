@@ -1,6 +1,6 @@
 type V2 = f64[]
 type V3 = f64[]
-type Color = u8[]
+type RGBA = u8[]
 type M3 = f64[]
 
 const v2 = (x: f64, y: f64): V2 => [x, y]
@@ -50,7 +50,7 @@ const m3Inplace = (
 	m[8] = a33
 	return m
 }
-const colorInplace = (c: Color, r: u8, g: u8, b: u8, a: u8): Color => {
+const colorInplace = (c: RGBA, r: u8, g: u8, b: u8, a: u8): RGBA => {
 	c[0] = r
 	c[1] = g
 	c[2] = b
@@ -63,7 +63,7 @@ const appleM3Inplace = (m: M3, v: V3): V3 => {
 	const z = m[6] * v[0] + m[7] * v[1] + m[8] * v[2]
 	return v3Inplace(v, x, y, z)
 }
-const lerp = (a: Color, b: Color, t: f64): Color => {
+const lerp = (a: RGBA, b: RGBA, t: f64): RGBA => {
 	return [
 		(a[0] + (b[0] - a[0]) * t) as u8,
 		(a[1] + (b[1] - a[1]) * t) as u8,
@@ -71,7 +71,7 @@ const lerp = (a: Color, b: Color, t: f64): Color => {
 		(a[3] + (b[3] - a[3]) * t) as u8,
 	]
 }
-const lerpInplace = (a: Color, b: Color, t: f64): Color => {
+const lerpInplace = (a: RGBA, b: RGBA, t: f64): RGBA => {
 	return colorInplace(
 		a,
 		(a[0] + (b[0] - a[0]) * t) as u8,
@@ -87,7 +87,7 @@ const lerpNumber = (a: u8, b: u8, t: f64): u8 => {
 export {
 	V2,
 	V3,
-	Color,
+	RGBA,
 	M3,
 	v2,
 	v2Inplace,
