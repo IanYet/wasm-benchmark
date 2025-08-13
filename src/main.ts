@@ -4,10 +4,15 @@ import { perspectiveTransform } from './transform'
 import { inverseM3, sleep, type M3 } from './utils'
 import { instantiate as asInstantiate } from '../build/release.js'
 import asWasmUrl from '../build/release.wasm?url'
+import initRust, {
+	perspective_transform as rustPerspectiveTransform,
+	type InitOutput,
+} from '../rust/pkg/wasm_benchmark_rust.js'
+import rustWasmUrl from '../rust/pkg/wasm_benchmark_rust_bg.wasm?url'
 
 const [width, height] = [512, 512]
 const [dWidth, dHeight] = [width * 2, height * 2]
-const dstList = ['js-dst', 'as-dst', 'as-simd-dst']
+const dstList = ['js-dst', 'as-dst', 'as-simd-dst', 'rust-dst']
 
 async function main() {
 	const appEl = document.getElementById('app')!
@@ -45,6 +50,11 @@ async function main() {
 
 	await sleep(1000)
 	asSIMD(asModule, srcImageData, inverseMatrix, dstCavList[2])
+
+	await sleep(1000)
+
+	const rustModule = await initRustModule()
+	rust(rustModule, srcImageData, inverseMatrix, dstCavList[3])
 }
 
 function js(srcImageData: ImageData, inverseMatrix: M3, dstCanvas: HTMLCanvasElement) {
@@ -73,6 +83,11 @@ async function initAs() {
 	})
 
 	return asModule
+}
+
+async function initRustModule() {
+	const rustModule = await initRust(rustWasmUrl)
+	return rustModule
 }
 
 function as(
@@ -118,4 +133,39 @@ function asSIMD(
 	const dstImageData = new ImageData(dstArrayBuffer, dWidth, dHeight)
 	drawFromImageData(dstCanvas, dstImageData)
 }
+
+function rust(
+	rustModule: InitOutput,
+	srcImageData: ImageData,
+	inverseMatrix: M3,
+	dstCanvas: HTMLCanvasElement
+) {
+	const { memory } = rustModule
+
+	// 计算所需的内存大小
+	const srcSize = width * height * 4
+	const dstSize = dWidth * dHeight * 4
+
+	// 获取当前内存大小，分配内存地址
+	const currentPages = memory.buffer.byteLength / 65536
+	const srcPtr = currentPages * 65536
+	const dstPtr = srcPtr + srcSize
+
+	// 增长内存以容纳源和目标数据
+	const neededPages = Math.ceil((srcSize + dstSize) / 65536)
+	memory.grow(neededPages)
+
+	// 复制源数据到 WASM 内存
+	const wasmData = new Uint8ClampedArray(memory.buffer)
+	wasmData.set(srcImageData.data, srcPtr)
+
+	console.time('rust perspectiveTransform')
+	rustPerspectiveTransform(srcPtr, dstPtr, width, height, dWidth, dHeight, ...inverseMatrix)
+	console.timeEnd('rust perspectiveTransform')
+
+	const dstArrayBuffer = new Uint8ClampedArray(memory.buffer, dstPtr, dstSize)
+	const dstImageData = new ImageData(dstArrayBuffer, dWidth, dHeight)
+	drawFromImageData(dstCanvas, dstImageData)
+}
+
 main()

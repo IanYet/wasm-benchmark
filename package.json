@@ -10,6 +10,9 @@
 		"asbuild:debug": "asc assembly/index.ts --target debug",
 		"asbuild:release": "asc --config asconfig.json assembly/index.ts --target release",
 		"asbuild": "npm run asbuild:debug && npm run asbuild:release",
+		"rust:debug": "cd rust && cargo build --target wasm32-unknown-unknown",
+		"rust:release": "cd rust && cargo build --release --target wasm32-unknown-unknown",
+		"rust:build": "npm run rust:debug && npm run rust:release",
 		"test": "node tests",
 		"start": "npx serve ."
 	},
