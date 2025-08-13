@@ -30,13 +30,13 @@ export const perspectiveTransform = (
 			for (let k = 0; k < 4; ++k) {
 				dst[(j * dW + i) * 4 + k] = lerpNumber(
 					lerpNumber(
-						src[(y * sW + x) * 4 + k] ?? 0,
-						src[(y * sW + x + 1) * 4 + k] ?? 0,
+						getColor(x, y, k, sW, sH, src),
+						getColor(x + 1, y, k, sW, sH, src),
 						factorX
 					),
 					lerpNumber(
-						src[((y + 1) * sW + x) * 4 + k] ?? 0,
-						src[((y + 1) * sW + x + 1) * 4 + k] ?? 0,
+						getColor(x, y + 1, k, sW, sH, src),
+						getColor(x + 1, y + 1, k, sW, sH, src),
 						factorX
 					),
 					factorY
@@ -46,4 +46,18 @@ export const perspectiveTransform = (
 	}
 
 	return dst
+}
+
+function getColor(
+	i: number,
+	j: number,
+	k: number,
+	w: number,
+	h: number,
+	data: Uint8ClampedArray
+): number {
+	if (i >= 0 && i < w && j >= 0 && j < h) {
+		return data[(j * w + i) * 4 + k] ?? 0
+	}
+	return 0
 }

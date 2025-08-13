@@ -1,6 +1,6 @@
 type V2 = f64[]
 type V3 = f64[]
-type Color = i8[]
+type Color = u8[]
 type M3 = f64[]
 
 const v2 = (x: f64, y: f64): V2 => [x, y]
@@ -50,7 +50,7 @@ const m3Inplace = (
 	m[8] = a33
 	return m
 }
-const colorInplace = (c: Color, r: i8, g: i8, b: i8, a: i8): Color => {
+const colorInplace = (c: Color, r: u8, g: u8, b: u8, a: u8): Color => {
 	c[0] = r
 	c[1] = g
 	c[2] = b
@@ -65,23 +65,23 @@ const appleM3Inplace = (m: M3, v: V3): V3 => {
 }
 const lerp = (a: Color, b: Color, t: f64): Color => {
 	return [
-		(a[0] + (b[0] - a[0]) * t) as i8,
-		(a[1] + (b[1] - a[1]) * t) as i8,
-		(a[2] + (b[2] - a[2]) * t) as i8,
-		(a[3] + (b[3] - a[3]) * t) as i8,
+		(a[0] + (b[0] - a[0]) * t) as u8,
+		(a[1] + (b[1] - a[1]) * t) as u8,
+		(a[2] + (b[2] - a[2]) * t) as u8,
+		(a[3] + (b[3] - a[3]) * t) as u8,
 	]
 }
 const lerpInplace = (a: Color, b: Color, t: f64): Color => {
 	return colorInplace(
 		a,
-		(a[0] + (b[0] - a[0]) * t) as i8,
-		(a[1] + (b[1] - a[1]) * t) as i8,
-		(a[2] + (b[2] - a[2]) * t) as i8,
-		(a[3] + (b[3] - a[3]) * t) as i8
+		(a[0] + (b[0] - a[0]) * t) as u8,
+		(a[1] + (b[1] - a[1]) * t) as u8,
+		(a[2] + (b[2] - a[2]) * t) as u8,
+		(a[3] + (b[3] - a[3]) * t) as u8
 	)
 }
-const lerpNumber = (a: i8, b: i8, t: f64): i8 => {
-	return (a + (b - a) * t) as i8
+const lerpNumber = (a: u8, b: u8, t: f64): u8 => {
+	return (a + (b - a) * t) as u8
 }
 
 export {

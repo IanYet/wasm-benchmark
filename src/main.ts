@@ -41,7 +41,7 @@ async function main() {
 	await sleep(1000)
 
 	const asModule = await initAs()
-	as(asModule, srcImageData, inverseMatrix)
+	as(asModule, srcImageData, inverseMatrix, dstCavList[1])
 }
 
 function js(srcImageData: ImageData, inverseMatrix: M3, dstCanvas: HTMLCanvasElement) {
@@ -75,7 +75,20 @@ async function initAs() {
 function as(
 	asModule: Awaited<ReturnType<typeof asInstantiate>>,
 	srcImageData: ImageData,
-	inverseMatrix: M3
-) {}
+	inverseMatrix: M3,
+	dstCanvas: HTMLCanvasElement
+) {
+	const { memory, perspectiveTransform } = asModule
+	const wasmData = new Uint8ClampedArray(memory.buffer)
+	wasmData.set(srcImageData.data)
+	perspectiveTransform(width, height, dWidth, dHeight, inverseMatrix)
+	const dstArrayBuffer = new Uint8ClampedArray(
+		memory.buffer,
+		srcImageData.data.length,
+		dWidth * dHeight * 4
+	)
+	const dstImageData = new ImageData(dstArrayBuffer, dWidth, dHeight)
+	drawFromImageData(dstCanvas, dstImageData)
+}
 
 main()
