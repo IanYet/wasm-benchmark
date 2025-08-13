@@ -1,5 +1,3 @@
-import { lerpNumber, M3 } from './utils'
-
 export function perspectiveTransform(
 	srcPtr: u32,
 	dstPtr: u32,
@@ -7,7 +5,7 @@ export function perspectiveTransform(
 	sH: i32,
 	dW: i32,
 	dH: i32,
-	m: M3
+	m: f64[]
 ): void {
 	for (let i: i32 = 0; i < dW; ++i) {
 		for (let j: i32 = 0; j < dH; ++j) {
