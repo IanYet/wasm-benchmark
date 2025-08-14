@@ -86,7 +86,7 @@ async function initAs() {
 }
 
 async function initRustModule() {
-	const rustModule = await initRust(rustWasmUrl)
+	const rustModule = await initRust({ module_or_path: rustWasmUrl })
 	return rustModule
 }
 
@@ -142,20 +142,16 @@ function rust(
 ) {
 	const { memory } = rustModule
 
-	// 计算所需的内存大小
 	const srcSize = width * height * 4
 	const dstSize = dWidth * dHeight * 4
 
-	// 获取当前内存大小，分配内存地址
 	const currentPages = memory.buffer.byteLength / 65536
 	const srcPtr = currentPages * 65536
 	const dstPtr = srcPtr + srcSize
 
-	// 增长内存以容纳源和目标数据
 	const neededPages = Math.ceil((srcSize + dstSize) / 65536)
 	memory.grow(neededPages)
 
-	// 复制源数据到 WASM 内存
 	const wasmData = new Uint8ClampedArray(memory.buffer)
 	wasmData.set(srcImageData.data, srcPtr)
 
