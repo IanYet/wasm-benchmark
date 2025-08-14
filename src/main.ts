@@ -6,13 +6,14 @@ import { instantiate as asInstantiate } from '../build/release.js'
 import asWasmUrl from '../build/release.wasm?url'
 import initRust, {
 	perspective_transform as rustPerspectiveTransform,
+	// perspective_transform_simd as rustPerspectiveTransformSIMD,
 	type InitOutput,
 } from '../rust/pkg/wasm_benchmark_rust.js'
 import rustWasmUrl from '../rust/pkg/wasm_benchmark_rust_bg.wasm?url'
 
 const [width, height] = [512, 512]
 const [dWidth, dHeight] = [width * 2, height * 2]
-const dstList = ['js-dst', 'as-dst', 'as-simd-dst', 'rust-dst']
+const dstList = ['js-dst', 'as-dst', 'as-simd-dst', 'rust-dst', 'rust-simd-dst']
 
 async function main() {
 	const appEl = document.getElementById('app')!
@@ -41,20 +42,23 @@ async function main() {
 	const perspectiveMatrix: M3 = [0.4, 0, 0.2, -0.2, 0.6, 0.2, -0.4, 0, 1]
 	const inverseMatrix = inverseM3(perspectiveMatrix)
 
-	js(srcImageData, inverseMatrix, dstCavList[0])
+	// js(srcImageData, inverseMatrix, dstCavList[0])
 
-	await sleep(1000)
+	// await sleep(1000)
 
-	const asModule = await initAs()
-	as(asModule, srcImageData, inverseMatrix, dstCavList[1])
+	// const asModule = await initAs()
+	// as(asModule, srcImageData, inverseMatrix, dstCavList[1])
 
-	await sleep(1000)
-	asSIMD(asModule, srcImageData, inverseMatrix, dstCavList[2])
+	// await sleep(1000)
+	// asSIMD(asModule, srcImageData, inverseMatrix, dstCavList[2])
 
-	await sleep(1000)
+	// await sleep(1000)
 
 	const rustModule = await initRustModule()
 	rust(rustModule, srcImageData, inverseMatrix, dstCavList[3])
+
+	// await sleep(1000)
+	// rustSIMD(rustModule, srcImageData, inverseMatrix, dstCavList[4])
 }
 
 function js(srcImageData: ImageData, inverseMatrix: M3, dstCanvas: HTMLCanvasElement) {
@@ -163,5 +167,35 @@ function rust(
 	const dstImageData = new ImageData(dstArrayBuffer, dWidth, dHeight)
 	drawFromImageData(dstCanvas, dstImageData)
 }
+
+// function rustSIMD(
+// 	rustModule: InitOutput,
+// 	srcImageData: ImageData,
+// 	inverseMatrix: M3,
+// 	dstCanvas: HTMLCanvasElement
+// ) {
+// 	const { memory } = rustModule
+
+// 	const srcSize = width * height * 4
+// 	const dstSize = dWidth * dHeight * 4
+
+// 	const currentPages = memory.buffer.byteLength / 65536
+// 	const srcPtr = currentPages * 65536
+// 	const dstPtr = srcPtr + srcSize
+
+// 	const neededPages = Math.ceil((srcSize + dstSize) / 65536)
+// 	memory.grow(neededPages)
+
+// 	const wasmData = new Uint8ClampedArray(memory.buffer)
+// 	wasmData.set(srcImageData.data, srcPtr)
+
+// 	console.time('rust SIMD perspectiveTransform')
+// 	rustPerspectiveTransformSIMD(srcPtr, dstPtr, width, height, dWidth, dHeight, ...inverseMatrix)
+// 	console.timeEnd('rust SIMD perspectiveTransform')
+
+// 	const dstArrayBuffer = new Uint8ClampedArray(memory.buffer, dstPtr, dstSize)
+// 	const dstImageData = new ImageData(dstArrayBuffer, dWidth, dHeight)
+// 	drawFromImageData(dstCanvas, dstImageData)
+// }
 
 main()
