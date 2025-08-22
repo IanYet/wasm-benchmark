@@ -42,7 +42,7 @@ async function main() {
 	const perspectiveMatrix: M3 = [0.4, 0, 0.2, -0.2, 0.6, 0.2, -0.4, 0, 1]
 	const inverseMatrix = inverseM3(perspectiveMatrix)
 
-	js(srcImageData, inverseMatrix, dstCavList[0])
+	// js(srcImageData, inverseMatrix, dstCavList[0])
 
 	// await sleep(1000)
 
@@ -54,11 +54,11 @@ async function main() {
 
 	// await sleep(1000)
 
-	// const rustModule = await initRustModule()
+	const rustModule = await initRustModule()
 	// rust(rustModule, srcImageData, inverseMatrix, dstCavList[3])
 
 	// await sleep(1000)
-	// rustSIMD(rustModule, srcImageData, inverseMatrix, dstCavList[4])
+	rustSIMD(rustModule, srcImageData, inverseMatrix, dstCavList[4])
 }
 
 function js(srcImageData: ImageData, inverseMatrix: M3, dstCanvas: HTMLCanvasElement) {
